@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reply</title>
+</head>
+<body>
+    <div>
+        <h1>{{ chirp[1] }}</h1>
+        <p>{{ chirp[2] }}<p>
+        {% if chirp[3] %}
+        <img class="chirp-img" src="{{ chirp[3] }}">
+        {% endif %}
+        <p>{{ chirp[5] }}</p>
+        <a>Retweet</a>
+        <a>Like</a>
+    </div>
+    {% for reply in replies %}
+    <div>
+            <h1>{{ reply[1] }}</h1>
+            <p>{{ reply[2] }}<p>
+            {% if reply[3] %}
+            <img class="chirp-img" src="{{ chirp[3] }}">
+            {% endif %}
+            <p>{{ reply[5] }}</p>
+            <a>Retweet</a>
+            <a>Like</a>
+        </div>
+    {% endfor %}
+
+
+    <form action="/reply/{{chirp[0]}}" method="post">
+        <input placeholder="Tweet your reply"  name="reply" type="text">
+        <input placeholder="Media?"  name="media" type="text">
+        <input type="submit" value="Reply">
+    </form>
+
+</body>
+</html>

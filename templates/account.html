@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %} Account {% endblock %}
+
+{% block body %}
+
+    <div class="root">
+        <div class="sidenav">
+            <img class="bird-icon" src="/static/bird.png">
+            <a class="navbar-item" href="/home">Home</a>
+            <a class="navbar-item" href="/explore">#Explore</a>
+            <a class="navbar-item" href="/notifications">Notifications</a>
+            <a class="navbar-item" href="/messages">Messages</a>
+            <a class="navbar-item" href="/bookmarks">Bookmarks</a>
+            <a class="navbar-item" href="/blue">Chirper Blue</a>
+            <a class="navbar-item" href="index.html">Profile</a>
+            <a class="navbar-item" href="index.html">More</a>
+        </div>
+    <main>
+        <div class="profile-div">
+            <img class="banner-img" src="/static/planets.jpeg">
+            <img class="profile-img" src="/static/profile.jpg">
+            <a href="{{ url_for( 'follow', to_follow=to_follow) }}">Follow</a>
+            <h1>Username</h1>
+            <p>Joined June 2009</p>
+            <span>157 Following</span> <span>122.4 M Followers</span>
+        </div>
+
+
+        {% for chirp in chirps %}
+        <div class="chirp-div">
+            <h1>{{ chirp[1] }}</h1>
+            <p>{{ chirp[2] }}<p>
+            {% if chirp[3] %}
+            <img class="chirp-img" src="{{ chirp[3] }}">
+            {% endif %}
+            <p>{{ chirp[5] }}</p>
+            <a href="{{url_for('reply', chirp_id=chirp[0])}}">Reply</a>
+            <a>Retweet</a>
+            <a>Like</a>
+        </div>
+        {% endfor %}
+
+
+    </main>
+    </div>
+
+
+{% endblock %}

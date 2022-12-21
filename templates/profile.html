@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %} Profile {% endblock %}
+
+{% block body %}
+
+        <div class="profile-div">
+            <img class="banner-img" src="/static/planets.jpeg">
+            <img class="profile-img" src="/static/profile.jpg">
+            <button class="follow-btn">Follow</button>
+            <h1>{{ username }}</h1>
+            <p>Joined {{ user_info[3] }}</p>
+            <span>{{ user_info[4] }} Following</span> <span>{{ user_info[5] }} Followers</span>
+        </div>
+
+ {% for chirp in chirps %}
+        <div class="chirp-div">
+            <a href="{{url_for('account', to_follow=username)}}">{{ username }}</a>
+            <h1>{{ chirp[1] }}</h1>
+            <p>{{ chirp[2] }}<p>
+            {% if chirp[3] %}
+            <img class="chirp-img" src="{{ chirp[3] }}">
+            {% endif %}
+            <p>{{ chirp[5] }}</p>
+            <a href="{{url_for('reply', chirp_id=chirp[0])}}">Reply</a>
+            <a>Retweet</a>
+            <a>Like</a>
+        </div>
+        {% endfor %}
+
+{% endblock %}

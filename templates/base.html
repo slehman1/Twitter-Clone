@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title> {% block title %} {% endblock %}</title>
+</head>
+<body>
+    <div class="root">
+        <div class="sidenav">
+            <img class="bird-icon" src="/static/bird.png">
+            <a class="navbar-item" href="/home">Home</a>
+            <a class="navbar-item" href="/explore">#Explore</a>
+            <a class="navbar-item" href="/notifications">Notifications</a>
+            <a class="navbar-item" href="/messages">Messages</a>
+            <a class="navbar-item" href="/bookmarks">Bookmarks</a>
+            <a class="navbar-item" href="/blue">Chirper Blue</a>
+            <a class="navbar-item" href="index.html">Profile</a>
+            <a class="navbar-item" href="index.html">More</a>
+        </div>
+
+        <div class="search-div">
+            <form action="/search" method="post">
+                <input class="chirp-text-input" placeholder="Search Chirper"  name="search" type="text">
+                <input class="chirp-btn" type="submit" value="Search">
+            </form>
+        </div>
+
+
+    <main>
+       {% block body %}
+        {% endblock %}
+
+    </main>
+    </div>
+</body>
+</html>
