@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %} Following {% endblock %}
+
+{% block body %}
+
+<main>
+    {% if at_following %}
+    <h1>Following!</h1>
+    {% else %}
+     <h1>Followers</h1>
+    {% if not accounts %}
+    <h2>Go out there and make a name for yourself kiddo!</h2>
+    {% endif %}
+    {% endif %}
+
+    {% for account in accounts %}
+    <div class="chirp-div">
+        <img class="profile-img-sml" src="{{account[7]}}">
+        <a href="{{ url_for('account', to_follow=account[1]) }} ">{{ account[1] }}</a>
+        <h1>{{ account[1] }}</h1>
+        {% if account[6] %}
+        <h2>{{ account[6] }}</h2>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+</main>
+
+
+
+{% endblock %}

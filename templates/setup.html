@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %} Setup {% endblock %}
+
+{% block body %}
+
+    <main>
+        <h1>Update profile!</h1>
+        <form action="/setup" method="post">
+            <label>Profile Image Address</label>
+            <input type="text" name="propic" value="{{user_info[7]}}">
+            <br>
+            <label>Banner Image Address</label>
+            <input type="text" name="banner" value="{{user_info[8]}}">
+            <br>
+            <label>Cheeky Bio</label>
+            <input type="text" name="bio" value="{{user_info[6]}}">
+            <input type="submit" placeholder="Profile Image Address" name="Update">
+        </form>
+    </main>
+
+
+
+
+{% endblock %}

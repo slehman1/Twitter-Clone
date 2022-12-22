@@ -16,16 +16,32 @@
             <a class="navbar-item" href="/messages">Messages</a>
             <a class="navbar-item" href="/bookmarks">Bookmarks</a>
             <a class="navbar-item" href="/blue">Chirper Blue</a>
-            <a class="navbar-item" href="index.html">Profile</a>
-            <a class="navbar-item" href="index.html">More</a>
+            <a class="navbar-item" href="/profile">Profile</a>
+            <a class="navbar-item" href="/more">More</a>
         </div>
 
         <div class="search-div">
             <form action="/search" method="post">
-                <input class="chirp-text-input" placeholder="Search Chirper"  name="search" type="text">
-                <input class="chirp-btn" type="submit" value="Search">
+                <input class="" placeholder="Search Chirper"  name="search" type="text">
+                <input class="search-btn" type="submit" value="Search">
             </form>
         </div>
+
+        <div class="who_follow_div">
+                 <h3>Popular Accounts</h3>
+                 {% for top3 in top_3 %}
+                 <div>
+                     <img class="profile-img-sml" src="{{ top3[7] }}">
+                     <a href="{{ url_for('account', to_follow=top3[1]) }}"]>{{ top3[1] }}</a>
+                     <h1>{{ top3[1] }}</h1>
+                     {% if top3[6] %}
+                     <h3>{{ top3[6] }}</h3>
+                     {% else %}
+                     <h3>Not interesting enough to have a bio</h3>
+                     {% endif %}
+                 </div>
+                 {% endfor %}
+             </div>
 
 
     <main>

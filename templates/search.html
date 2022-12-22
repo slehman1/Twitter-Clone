@@ -4,14 +4,27 @@
 
 {% block body %}
 
+<main>
+
+
+{% if not accounts %}
+<h2>Sorry your search didn't come up with any results. Please try again with a different query!</h2>
+{% endif %}
+
+{% if accounts %}
+    <h2>Top results:</h2>
+    {% endif %}
+
 {% for account in accounts %}
-    <div>
+    <div class="border">
         <a href="{{ url_for('account', to_follow=account[1]) }}">{{ account[1] }}</a>
         <h1>{{ account[1] }}</h1>
         <h2>Bio: {{ account[6] }}</h2>
         <h3>Following</h3>
     </div>
 {% endfor %}
+
+</main>
 
 
 {% endblock %}

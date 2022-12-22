@@ -6,8 +6,9 @@ font-family: Helvetica, sans-serif;
 
 main {
 position: relative;
-left: 22.5%;
+left: 15%;
 bottom: 30%;
+max-width: 70%;
 }
 
 .sidenav {
@@ -45,7 +46,6 @@ display: inline-block;
 
 
 .chirp-div {
-width: 45%;
 border: 1px solid gray;
 }
 
@@ -56,7 +56,8 @@ width: 100%;
 .chirp-btn {
 background-color: blue;
 color: white;
-width: 5%;
+width: 60px;
+height: 20px;
 border: none;
 border-radius: 5px;
 font-weight: bold;
@@ -73,8 +74,8 @@ width: 45%;
 }
 
 .banner-img {
-width: 100%;
-height:
+width: 528px;
+height: 300px;
 }
 
 .profile-img {
@@ -82,14 +83,57 @@ border-radius: 50%;
 width: 100px;
 }
 
-.follow-btn {
+.profile-img-sml {
+border-radius: 50%;
+width: 60px;
+}
+
+.follow-btn-div {
+border-radius: 5px;
 background-color: black;
+width: 120px;
+height: 30px;
+text-align: center;
+
+}
+
+.follow-btn {
+color: white;
+font-weight: bold;
+padding: 15px;
+
+}
+
+.follow-btn:hover{
+color: white;
+text-decoration: none;
+}
+
+
+
+.search-div {
+position: fixed;
+left: 75%;
+top: 2%;
+}
+
+.search-btn {
+background-color: blue;
 color: white;
 width: 60px;
 border-radius: 5px;
 font-weight: bold;
+border: none;
 }
 
-.search-div {
+.who_follow_div {
+background-color: #f2f2f2;
+width: 20%;
 position: fixed;
+left: 78%;
+top: 10%
+}
+
+.border{
+border: 1px gray solid;
 }

@@ -5,25 +5,36 @@
 {% block body %}
 
     <div class="root">
-        <div class="sidenav">
-            <img class="bird-icon" src="/static/bird.png">
-            <a class="navbar-item" href="/home">Home</a>
-            <a class="navbar-item" href="/explore">#Explore</a>
-            <a class="navbar-item" href="/notifications">Notifications</a>
-            <a class="navbar-item" href="/messages">Messages</a>
-            <a class="navbar-item" href="/bookmarks">Bookmarks</a>
-            <a class="navbar-item" href="/blue">Chirper Blue</a>
-            <a class="navbar-item" href="index.html">Profile</a>
-            <a class="navbar-item" href="index.html">More</a>
-        </div>
     <main>
         <div class="profile-div">
+            {% if user_info[8] %}
+            <img class="banner-img" src="{{ user_info[8] }}">
+            {% else %}
             <img class="banner-img" src="/static/planets.jpeg">
+            {% endif %}
+             {% if user_info[7] %}
+            <img class="profile-img" src="{{ user_info[7] }}">
+            {% else %}
             <img class="profile-img" src="/static/profile.jpg">
-            <a href="{{ url_for( 'follow', to_follow=to_follow) }}">Follow</a>
-            <h1>Username</h1>
-            <p>Joined June 2009</p>
-            <span>157 Following</span> <span>122.4 M Followers</span>
+            {% endif %}
+            {% if not self %}
+                {% if is_following %}
+                <div class="follow-btn-div">
+                    <a class="follow-btn" href="{{ url_for( 'unfollow', to_follow=to_follow) }}">Following</a>
+                </div>
+                {% else %}
+                <div class="follow-btn-div">
+                    <a class="follow-btn" href="{{ url_for( 'follow', to_follow=to_follow) }}">Follow</a>
+                </div>
+                {% endif %}
+            {% endif %}
+            <h1>{{ user_info[1] }}</h1>
+            {% if user_info[6] %}
+            <h3>{{user_info[6] }} </h3>
+            {% endif %}
+            <p>Joined {{user_info[3] }}</p>
+            <a href="{{ url_for( 'following', account=to_follow) }}">{{user_info[4]}} Following</a>
+            <a href="{{ url_for( 'followers', account=to_follow) }}">{{user_info[5]}} Followers</a>
         </div>
 
 

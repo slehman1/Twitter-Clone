@@ -3,18 +3,33 @@
 {% block title %} Profile {% endblock %}
 
 {% block body %}
+<main>
+
 
         <div class="profile-div">
+            {% if user_info[8] %}
+            <img class="banner-img" src="{{ user_info[8] }}">
+            {% else %}
             <img class="banner-img" src="/static/planets.jpeg">
+            {% endif %}
+             {% if user_info[7] %}
+            <img class="profile-img" src="{{ user_info[7] }}">
+            {% else %}
             <img class="profile-img" src="/static/profile.jpg">
-            <button class="follow-btn">Follow</button>
+            {% endif %}
             <h1>{{ username }}</h1>
+            {% if user_info[6] %}
+            <p>{{ user_info[6] }}</p>
+            {% endif %}
             <p>Joined {{ user_info[3] }}</p>
-            <span>{{ user_info[4] }} Following</span> <span>{{ user_info[5] }} Followers</span>
+            <a href="{{ url_for( 'following', account=user_info[1]) }}">{{user_info[4]}} Following</a>
+            <a href="{{ url_for( 'followers', account=user_info[1]) }}">{{user_info[5]}} Followers</a>
+            <a href="/setup">Edit Profile</a>
         </div>
 
  {% for chirp in chirps %}
         <div class="chirp-div">
+            <img class="profile-img-sml" src="{{user_info[7]}}">
             <a href="{{url_for('account', to_follow=username)}}">{{ username }}</a>
             <h1>{{ chirp[1] }}</h1>
             <p>{{ chirp[2] }}<p>
@@ -28,4 +43,5 @@
         </div>
         {% endfor %}
 
+    </main>
 {% endblock %}
