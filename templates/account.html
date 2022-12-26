@@ -48,7 +48,7 @@
             {% if not chirp.original_by %}
             <a href="{{url_for('rechirp', chirp_id=chirp.id)}}">Rechirp</a>
             {% endif %}
-            <a>Like</a>
+            <a href="{{url_for('like', chirp_id=chirp.id)}}"> {{ chirp.likes }} Likes</a>
             <a href="{{url_for('bookmark_verb', chirp_id=chirp.id)}}">Bookmark</a>
         </div>
         {% endfor %}

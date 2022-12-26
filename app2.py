@@ -79,6 +79,7 @@ with app.app_context():
         date_num = db.Column(db.Float, nullable=False)
         date_date = db.Column(db.String(100), nullable=False)
         user_id = db.Column(db.Integer, db.ForeignKey(Users.id))
+        likes = db.Column(db.Integer, nullable=True)
 
     class Notifications(db.Model):
         __tablename__ = "notifications"
@@ -95,7 +96,8 @@ with app.app_context():
     class Likes(db.Model):
         __tablename__ = "likes"
         id = db.Column(db.Integer, primary_key=True)
-        chirp_id = db.Column(db.Integer, nullable=False)
+        chirp_id = db.Column(db.Integer, nullable=True)
+        reply_id = db.Column(db.Integer, nullable=True)
         username = db.Column(db.String(100), nullable=False)
 
     db.create_all()
@@ -229,6 +231,7 @@ def reply(chirp_id):
             date_num = date_num,
             date_date = date_date,
             user_id = user_id,
+            likes = 0,
         )
         db.session.add(new_reply)
         db.session.commit()
@@ -448,7 +451,6 @@ def rechirp(chirp_id):
     username = session["username"]
     #check if already retweeted so that you cant retweet again, if so remove?
     check = Chirps.query.filter(Chirps.username == username, Chirps.original_id == chirp_id).first()
-    print(check)
     if check:
         db.session.delete(check)
         db.session.commit()
@@ -457,6 +459,7 @@ def rechirp(chirp_id):
     chirp_of_interest = Chirps.query.filter_by(id=chirp_id).first()
     new_date_num = time.time()
     new_date_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    user_id = chirp_of_interest.user_id
     new_chirp = Chirps(
         username = username,
         original_by = chirp_of_interest.username,
@@ -467,6 +470,7 @@ def rechirp(chirp_id):
         date_num = new_date_num,
         date_date = new_date_date,
         likes = 0,
+        user_id = user_id,
 
     )
     db.session.add(new_chirp)
@@ -509,6 +513,31 @@ def like(chirp_id):
         Chirps.query.filter_by(id=chirp_id).update({"likes": current_chirp_likes})
         db.session.commit()
     return redirect("/home")
+
+@app.route("/like_reply/<reply_id>/<chirp_id>")
+def like_reply(reply_id, chirp_id):
+    username = session["username"]
+    #check to see if already liked
+    is_liked = Likes.query.filter(Likes.username == username, Likes.reply_id == reply_id).first()
+
+    if not is_liked:
+        new_like = Likes(
+            reply_id = reply_id,
+            username = username
+        )
+        db.session.add(new_like)
+        current_reply_likes = Replies.query.filter_by(id=reply_id).first().likes
+        current_reply_likes += 1
+        Replies.query.filter_by(id=reply_id).update({"likes": current_reply_likes})
+        db.session.commit()
+    else:
+        like_to_remove = Likes.query.filter(Likes.username == username, Likes.reply_id == reply_id).first()
+        db.session.delete(like_to_remove)
+        current_reply_likes = Replies.query.filter_by(id=reply_id).first().likes
+        current_reply_likes -= 1
+        Replies.query.filter_by(id=reply_id).update({"likes": current_reply_likes})
+        db.session.commit()
+    return redirect(f"/reply/{chirp_id}")
 
 if __name__ == "__main__":
     app.run(debug=True)

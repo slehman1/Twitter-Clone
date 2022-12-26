@@ -8,21 +8,26 @@
 
     <div class="chirp-div">
         {% if chirp.original_by %}
-        <h2>Retweeted by {{chirp.username}}</h2>
+        <h3>Rechirped by {{chirp.username}}</h3>
         {% endif %}
+
         {% if chirp.users.pro_pic %}
         <img class="profile-img-sml" src="{{ chirp.users.pro_pic }}">
         {% else %}
         <img class="profile-img-sml" src="/static/profile.jpg">
         {% endif %}
 
+        {% if chirp.original_by %}
+        <a href="{{ url_for('account', to_follow=chirp.username) }}">{{ chirp.original_by }}</a>
+        {% else %}
         <a href="{{ url_for('account', to_follow=chirp.username) }}">{{ chirp.username }}</a>
-        <h1>{{ chirp.username }}</h1>
-        <p>{{ chirp.text_content }}<p>
+        {% endif %}
+
+        <h4>{{ chirp.text_content }}</h4>
         {% if chirp.media_content %}
         <img class="chirp-img" src="{{ chirp.media_content }}">
         {% endif %}
-        <p>{{ chirp.date_date }}</p>
+        <h6>{{ chirp.date_date }}</h6>
         <a href="{{url_for('like', chirp_id=chirp.id)}}"> {{chirp.likes}} Likes</a>
         <a href="{{url_for('bookmark_verb', chirp_id=chirp.id)}}">Bookmark</a>
     </div>
@@ -34,13 +39,12 @@
             <img class="profile-img-sml" src="/static/profile.jpg">
             {% endif %}
             <a href="{{ url_for('account', to_follow=reply.username) }}">{{ reply.username }}</a>
-            <h1>{{ reply.username }}</h1>
-            <p>{{ reply.text_content }}<p>
+            <h4>{{ reply.text_content }}</h4>
             {% if reply.media_content %}
             <img class="chirp-img" src="{{ chirp.media_content }}">
             {% endif %}
-            <p>{{ reply.date_date }}</p>
-            <a>Like</a>
+            <h6>{{ reply.date_date }}</h6>
+            <a href="{{url_for('like_reply', reply_id=reply.id, chirp_id=chirp.id)}}"> {{reply.likes}} Likes</a>
         </div>
     {% endfor %}
 
