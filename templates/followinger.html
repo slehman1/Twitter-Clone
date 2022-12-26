@@ -16,11 +16,11 @@
 
     {% for account in accounts %}
     <div class="chirp-div">
-        <img class="profile-img-sml" src="{{account[7]}}">
-        <a href="{{ url_for('account', to_follow=account[1]) }} ">{{ account[1] }}</a>
-        <h1>{{ account[1] }}</h1>
-        {% if account[6] %}
-        <h2>{{ account[6] }}</h2>
+        <img class="profile-img-sml" src="{{account.pro_pic}}">
+        <a href="{{ url_for('account', to_follow=account.username) }} ">{{ account.username }}</a>
+        <h1>{{ account.username }}</h1>
+        {% if account.bio %}
+        <h2>{{ account.bio }}</h2>
         {% endif %}
     </div>
     {% endfor %}

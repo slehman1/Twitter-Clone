@@ -3,14 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+
+<div class="login-div">
+
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
     <h1>Register</h1>
     <form action="/register" method="post">
         <input placeholder="Username" autofocus name="username" type="text">
         <input placeholder="Password" name="password" type="password">
         <input type="submit" value="Register">
     </form>
+    <a href="/">Back to Login</a>
 
+    </div>
 </body>
 </html>

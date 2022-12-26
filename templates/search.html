@@ -17,10 +17,9 @@
 
 {% for account in accounts %}
     <div class="border">
-        <a href="{{ url_for('account', to_follow=account[1]) }}">{{ account[1] }}</a>
-        <h1>{{ account[1] }}</h1>
-        <h2>Bio: {{ account[6] }}</h2>
-        <h3>Following</h3>
+        <a href="{{ url_for('account', to_follow=account.username) }}">{{ account.username }}</a>
+        <h1>{{ account.username }}</h1>
+        <h2>Bio: {{ account.bio }}</h2>
     </div>
 {% endfor %}
 

@@ -12,16 +12,22 @@
 
     {% for mark in marked %}
     <div class="chirp-div">
-        <a href="{{url_for('account', to_follow=mark[1])}}">{{ mark[1] }}</a>
-        <h1>{{ mark[1] }}</h1>
-        <p>{{ mark[2] }}<p>
-        {% if mark[3] %}
-        <img class="chirp-img" src="{{ mark[3] }}">
+        {% if mark.users.pro_pic %}
+        <img class="profile-img-sml" src="{{ mark.users.pro_pic }}">
+        {% else %}
+        <img class="profile-img-sml" src="/static/profile.jpg">
         {% endif %}
-        <p>{{ mark[5] }}</p>
-        <a href="{{url_for('reply', chirp_id=mark[0])}}">Reply</a>
-        <a>Retweet</a>
-        <a>Like</a>
+        <a href="{{url_for('account', to_follow=mark.username)}}">{{ mark.username }}</a>
+        <h1>{{ mark.username }}</h1>
+        <p>{{ mark.text_content }}<p>
+        {% if mark.media_content %}
+        <img class="chirp-img" src="{{ mark.media_content }}">
+        {% endif %}
+        <p>{{ mark.date_date }}</p>
+        <a href="{{url_for('reply', chirp_id=mark.id)}}">Reply</a>
+        <a href="{{url_for('rechirp', chirp_id=mark.id)}}">Rechirp</a>
+        <a> {{mark.likes}} Likes</a>
+        <a href="{{url_for('del_bookmark', chirp_id=mark.id)}}">Remove</a>
     </div>
     {% endfor %}
 

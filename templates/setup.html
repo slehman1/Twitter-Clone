@@ -8,13 +8,13 @@
         <h1>Update profile!</h1>
         <form action="/setup" method="post">
             <label>Profile Image Address</label>
-            <input type="text" name="propic" value="{{user_info[7]}}">
+            <input type="text" name="propic" value="{{user_info.pro_pic}}">
             <br>
             <label>Banner Image Address</label>
-            <input type="text" name="banner" value="{{user_info[8]}}">
+            <input type="text" name="banner" value="{{user_info.banner_pic}}">
             <br>
             <label>Cheeky Bio</label>
-            <input type="text" name="bio" value="{{user_info[6]}}">
+            <input type="text" name="bio" value="{{user_info.bio}}">
             <input type="submit" placeholder="Profile Image Address" name="Update">
         </form>
     </main>

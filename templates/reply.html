@@ -7,33 +7,46 @@
 
 
     <div class="chirp-div">
-        <a href="{{ url_for('account', to_follow=chirp[1]) }}">{{ chirp[1] }}</a>
-        <h1>{{ chirp[1] }}</h1>
-        <p>{{ chirp[2] }}<p>
-        {% if chirp[3] %}
-        <img class="chirp-img" src="{{ chirp[3] }}">
+        {% if chirp.original_by %}
+        <h2>Retweeted by {{chirp.username}}</h2>
         {% endif %}
-        <p>{{ chirp[5] }}</p>
-        <a>Retweet</a>
-        <a>Like</a>
+        {% if chirp.users.pro_pic %}
+        <img class="profile-img-sml" src="{{ chirp.users.pro_pic }}">
+        {% else %}
+        <img class="profile-img-sml" src="/static/profile.jpg">
+        {% endif %}
+
+        <a href="{{ url_for('account', to_follow=chirp.username) }}">{{ chirp.username }}</a>
+        <h1>{{ chirp.username }}</h1>
+        <p>{{ chirp.text_content }}<p>
+        {% if chirp.media_content %}
+        <img class="chirp-img" src="{{ chirp.media_content }}">
+        {% endif %}
+        <p>{{ chirp.date_date }}</p>
+        <a href="{{url_for('like', chirp_id=chirp.id)}}"> {{chirp.likes}} Likes</a>
+        <a href="{{url_for('bookmark_verb', chirp_id=chirp.id)}}">Bookmark</a>
     </div>
     {% for reply in replies %}
         <div class="chirp-div">
-            <a href="{{ url_for('account', to_follow=reply[1]) }}">{{ reply[1] }}</a>
-            <h1>{{ reply[1] }}</h1>
-            <p>{{ reply[2] }}<p>
-            {% if reply[3] %}
-            <img class="chirp-img" src="{{ chirp[3] }}">
+            {% if chirp.users.pro_pic %}
+            <img class="profile-img-sml" src="{{ reply.users.pro_pic }}">
+            {% else %}
+            <img class="profile-img-sml" src="/static/profile.jpg">
             {% endif %}
-            <p>{{ reply[5] }}</p>
-            <a>Retweet</a>
+            <a href="{{ url_for('account', to_follow=reply.username) }}">{{ reply.username }}</a>
+            <h1>{{ reply.username }}</h1>
+            <p>{{ reply.text_content }}<p>
+            {% if reply.media_content %}
+            <img class="chirp-img" src="{{ chirp.media_content }}">
+            {% endif %}
+            <p>{{ reply.date_date }}</p>
             <a>Like</a>
         </div>
     {% endfor %}
 
 
-    <form action="/reply/{{chirp[0]}}" method="post">
-        <input class="chirp-text-input" placeholder="Tweet your reply"  name="reply" type="text">
+    <form action="/reply/{{chirp.id}}" method="post">
+        <input class="chirp-text-input" placeholder="Chirp your reply"  name="reply" type="text">
         <input placeholder="Media?"  name="media" type="text">
         <input class="chirp-btn" type="submit" value="Reply">
     </form>

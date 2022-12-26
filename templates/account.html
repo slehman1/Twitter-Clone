@@ -7,17 +7,11 @@
     <div class="root">
     <main>
         <div class="profile-div">
-            {% if user_info[8] %}
-            <img class="banner-img" src="{{ user_info[8] }}">
-            {% else %}
-            <img class="banner-img" src="/static/planets.jpeg">
-            {% endif %}
-             {% if user_info[7] %}
-            <img class="profile-img" src="{{ user_info[7] }}">
-            {% else %}
-            <img class="profile-img" src="/static/profile.jpg">
-            {% endif %}
-            {% if not self %}
+            <img class="banner-img" src="{{ user_info.banner_pic }}">
+            <br>
+            <img class="profile-img" src="{{ user_info.pro_pic }}">
+
+            {% if not_self %}
                 {% if is_following %}
                 <div class="follow-btn-div">
                     <a class="follow-btn" href="{{ url_for( 'unfollow', to_follow=to_follow) }}">Following</a>
@@ -28,27 +22,34 @@
                 </div>
                 {% endif %}
             {% endif %}
-            <h1>{{ user_info[1] }}</h1>
-            {% if user_info[6] %}
-            <h3>{{user_info[6] }} </h3>
+            <h1>{{ user_info.username }}</h1>
+            {% if user_info.bio %}
+            <h3>{{user_info.bio }} </h3>
             {% endif %}
-            <p>Joined {{user_info[3] }}</p>
-            <a href="{{ url_for( 'following', account=to_follow) }}">{{user_info[4]}} Following</a>
-            <a href="{{ url_for( 'followers', account=to_follow) }}">{{user_info[5]}} Followers</a>
+            <p>Joined {{ user_info.joined_date }}</p>
+            <a href="{{ url_for( 'following', account=to_follow) }}">{{user_info.following_num }} Following</a>
+            <a href="{{ url_for( 'followers', account=to_follow) }}">{{user_info.followers_num }} Followers</a>
         </div>
 
 
         {% for chirp in chirps %}
         <div class="chirp-div">
-            <h1>{{ chirp[1] }}</h1>
-            <p>{{ chirp[2] }}<p>
-            {% if chirp[3] %}
-            <img class="chirp-img" src="{{ chirp[3] }}">
+            {% if chirp.original_by %}
+            <h2>Retweeted by {{chirp.username}}</h2>
             {% endif %}
-            <p>{{ chirp[5] }}</p>
-            <a href="{{url_for('reply', chirp_id=chirp[0])}}">Reply</a>
-            <a>Retweet</a>
+
+            <h1>{{ chirp.username }}</h1>
+            <p>{{ chirp.text_content }}<p>
+            {% if chirp.media_content %}
+            <img class="chirp-img" src="{{ chirp.media_content }}">
+            {% endif %}
+            <p>{{ chirp.date_date }}</p>
+            <a href="{{url_for('reply', chirp_id=chirp.id)}}">Reply</a>
+            {% if not chirp.original_by %}
+            <a href="{{url_for('rechirp', chirp_id=chirp.id)}}">Rechirp</a>
+            {% endif %}
             <a>Like</a>
+            <a href="{{url_for('bookmark_verb', chirp_id=chirp.id)}}">Bookmark</a>
         </div>
         {% endfor %}
 

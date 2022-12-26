@@ -3,33 +3,39 @@
 {% block title %} Index {% endblock %}
 
 {% block body %}
-    <div class="root">
 
-        <main>
             <div>
                 <form action="/home" method="post">
                     <input class="chirp-text-input" placeholder="What's happening?"  name="chirp" type="text">
-                    <input placeholder="Media?"  name="media" type="text">
+                    <input class="media-input" placeholder="Media?"  name="media" type="text">
                     <input class="chirp-btn" type="submit" value="Chirp">
                 </form>
             </div>
             {% for chirp in chirps %}
             <div class="chirp-div">
-                <a href="{{url_for('account', to_follow=chirp[1])}}">{{ chirp[1] }}</a>
-                <h1>{{ chirp[1] }}</h1>
-                <p>{{ chirp[2] }}<p>
-                {% if chirp[3] %}
-                <img class="chirp-img" src="{{ chirp[3] }}">
+                {% if chirp.original_by %}
+                <h3 class="pro-pic">Rechirped by {{chirp.username}}</h3>
                 {% endif %}
-                <p>{{ chirp[5] }}</p>
-                <a href="{{url_for('reply', chirp_id=chirp[0])}}">Reply</a>
-                <a>Retweet</a>
-                <a>Like</a>
-                <a href="{{url_for('bookmark_verb', chirp_id=chirp[0])}}">Bookmark</a>
+                {% if chirp.users.pro_pic %}
+                <img class="profile-img-sml" src="{{ chirp.users.pro_pic }}">
+                {% else %}
+                <img class="profile-img-sml" src="/static/profile.jpg">
+                {% endif %}
+                <a href="{{url_for('account', to_follow=chirp.username)}}">{{ chirp.username }}</a>
+                <h1>{{ chirp.username }}</h1>
+                <p>{{ chirp.text_content }}<p>
+                {% if chirp.media_content %}
+                <img class="chirp-img" src="{{ chirp.media_content }}">
+                {% endif %}
+                <p>{{ chirp.date_date }}</p>
+                <a href="{{url_for('reply', chirp_id=chirp.id)}}">Reply</a>
+                {% if not chirp.original_by %}
+                <a href="{{url_for('rechirp', chirp_id=chirp.id) }}">Rechirp</a>
+                {% endif %}
+                <a href="{{url_for('like', chirp_id=chirp.id)}}"> {{ chirp.likes }} Likes</a>
+                <a href="{{url_for('bookmark_verb', chirp_id=chirp.id)}}">Bookmark</a>
             </div>
             {% endfor %}
 
-        </main>
-    </div>
 
 {% endblock %}

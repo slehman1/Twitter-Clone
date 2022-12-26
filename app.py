@@ -4,6 +4,7 @@ import sqlite3
 import time
 import datetime
 
+#sqlite attempt
 
 app = Flask(__name__)
 
@@ -14,6 +15,7 @@ app = Flask(__name__)
 # c.execute("CREATE TABLE replies (chirp_id INTEGER NOT NULL, username TEXT NOT NULL, text_content TEXT NOT NULL, media_content TEXT NOT NULL, date_num NUMERIC NOT NULL, date_date TEXT NOT NULL)")
 # c.execute("CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username TEXT NOT NULL, password_hash TEXT NOT NULL, joined_date TEXT NOT NULL, following INTEGER, followers INTEGER, bio TEXT, pro_pic TEXT, banner_pic TEXT)")
 # c.execute("CREATE TABLE bookmarks (username TEXT NOT NULL, chirp_id INTEGER NOT NULL)")
+# c.execute("CREATE TABLE notifications (username TEXT NOT NULL, doer TEXT NOT NULL, date_num NUMERIC NOT NULL, date_date TEXT NOT NULL, followed INTEGER, retweeted INTEGER, liked INTEGER, chirp_id INTEGER)")
 
 app.secret_key = "oh_hi_mark_oh_hi_doggy"
 
@@ -22,8 +24,7 @@ def top3_accounts(username):
     and people you already follow'''
     conn = sqlite3.connect("Chirper.db")
     c = conn.cursor()
-    c.execute("SELECT * FROM users WHERE NOT username IN (SELECT user FROM followers WHERE follower = ?) ORDER BY followers DESC LIMIT 3", (username, ))
-
+    c.execute("SELECT * FROM users WHERE NOT username IN (SELECT user FROM followers WHERE follower = ?) AND username != ? ORDER BY followers DESC LIMIT 3", (username, username))
     top3 = c.fetchall()
     print(top3)
     conn.close()
@@ -143,24 +144,39 @@ def account(to_follow):
         is_following = True
     c.close()
     #check to see if on own account page so that you dont follow self
-    self = False
+    not_self = True
     if username.lower() == lower_to_follow:
-        self = True
-    return render_template("account.html", user_info=user_info, is_following=is_following, to_follow=to_follow, chirps=chirps, self=self)
+        not_self = False
+    top3 = top3_accounts(username)
+    return render_template("account.html", top_3=top3, user_info=user_info, is_following=is_following, to_follow=to_follow, chirps=chirps, not_self=not_self)
 
 
 
 @app.route("/explore")
 def explore():
-    return render_template("explore.html")
+    username = session["username"]
+    top3 = top3_accounts(username)
+    return render_template("explore.html", top_3=top3)
 
 @app.route("/notifications")
 def notifications():
-    return render_template("notifications.html")
+    #goal is to render top5 most recent notifications
+    username = session["username"]
+    top3 = top3_accounts(username)
+    conn = sqlite3.connect("Chirper.db")
+    c = conn.cursor()
+    c.execute("SELECT * FROM notifications WHERE username = ? ORDER BY date_num DESC LIMIT 5", (username,))
+    my_notifications = c.fetchall()
+    print(my_notifications)
+
+
+    return render_template("notifications.html", top_3=top3, my_notifications=my_notifications)
 
 @app.route("/messages")
 def messages():
-    return render_template("messages.html")
+    username = session["username"]
+    top3 = top3_accounts(username)
+    return render_template("messages.html", top_3=top3)
 
 @app.route("/bookmarkverb/<chirp_id>")
 def bookmark_verb(chirp_id):
@@ -182,11 +198,14 @@ def bookmarks():
     marked = c.fetchall()
     print(marked)
     conn.close()
-    return render_template("bookmarks.html", marked=marked)
+    top3 = top3_accounts(username)
+    return render_template("bookmarks.html", marked=marked, top_3=top3)
 
 @app.route("/blue")
 def blue():
-    return render_template("blue.html")
+    username = session["username"]
+    top3 = top3_accounts(username)
+    return render_template("blue.html", top_3=top3)
 
 @app.route("/profile")
 def profile():
@@ -197,7 +216,9 @@ def profile():
     chirps = c.fetchall()
     c.execute("SELECT * FROM users WHERE username = ?", (username, ))
     user_info = c.fetchall()[0]
-    return render_template("profile.html", user_info=user_info, username=username, chirps=chirps)
+    print(user_info)
+    top3 = top3_accounts(username)
+    return render_template("profile.html", top_3=top3, user_info=user_info, username=username, chirps=chirps)
 
 @app.route("/setup", methods=["GET", "POST"])
 def setup():
@@ -220,11 +241,10 @@ def setup():
     c.execute("SELECT * FROM users WHERE username = ?", (username,))
     user_info = c.fetchall()[0]
     conn.close()
-    return render_template("setup.html", user_info=user_info)
+    top3 = top3_accounts(username)
+    return render_template("setup.html", user_info=user_info, top_3=top3)
 
-@app.route("/more")
-def more():
-    return render_template("more.html")
+
 
 @app.route("/follow/<to_follow>")
 def follow(to_follow):
@@ -247,6 +267,12 @@ def follow(to_follow):
     following_count += 1
     c.execute("UPDATE users SET following = ? WHERE username = ?", (following_count, username))
     conn.commit()
+    #update notifications
+    date_num = time.time()
+    date_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    c.execute("INSERT INTO notifications (username, doer, followed, date_num, date_date) VALUES (?, ?, ?, ?, ?)", (to_follow_case, username, 1, date_num, date_date))
+    conn.commit()
+    conn.close()
     return redirect("/home")
 
 @app.route("/following/<account>")
@@ -258,7 +284,9 @@ def following(account):
     accounts = c.fetchall()
     print(accounts)
     at_following = True
-    return render_template("followinger.html", accounts=accounts, at_following=at_following)
+    username = session["username"]
+    top3 = top3_accounts(username)
+    return render_template("followinger.html", accounts=accounts, at_following=at_following, top_3=top3)
 
 @app.route("/follower/<account>")
 def followers(account):
@@ -269,7 +297,9 @@ def followers(account):
     accounts = c.fetchall()
     print(accounts)
     at_following = False
-    return render_template("followinger.html", accounts=accounts, at_following=at_following)
+    username = session["username"]
+    top3 = top3_accounts(username)
+    return render_template("followinger.html", top_3=top3, accounts=accounts, at_following=at_following)
 
 @app.route("/unfollow/<to_follow>")
 def unfollow(to_follow):
@@ -304,7 +334,9 @@ def search():
     c.execute("SELECT * FROM users WHERE username LIKE ?", (search_query,))
     db_results = c.fetchall()
     print(db_results)
-    return render_template("search.html", accounts=db_results)
+    username = session["username"]
+    top3 = top3_accounts(username)
+    return render_template("search.html", top_3=top3, accounts=db_results)
 
 
 

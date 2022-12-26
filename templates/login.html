@@ -2,15 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
     <title>Login</title>
 </head>
 <body>
-    <h1>LogIn</h1>
+<div class="login-div">
+
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+
+    <h1>Login</h1>
     <form action="/" method="post">
-        <input placeholder="Username"  name="username" type="text">
+        <input autofocus placeholder="Username"  name="username" type="text">
         <input placeholder="Password"  name="password" type="password">
         <input type="submit" value="Log In">
     </form>
 
+    <div>
+        <h1 class="user-policy">User policy</h1>
+        <p>No funny business</p>
+        <p>Media should be a link to something online (right click image, copy link address)</p>
+        <a href="/register">Register</a>
+    </div>
+</div>
 </body>
 </html>

@@ -5,7 +5,28 @@
 {% block body %}
 
 <main>
-    <h1>Coming Soon!</h1>
+    <h1>Notifications!</h1>
+    {% if not my_notifications %}
+    <h1>You have no new notifications!</h1>
+    {% endif %}
+
+    {% for notification in my_notifications %}
+    <div class="chirp-div">
+        {% if notification.followed %}
+        <h1>{{notification.doer }} followed you!</h1>
+        {% endif %}
+        {% if notification.retweeted %}
+        <h1>{{notification.doer}} rechirped your chirp!</h1>
+        <a href="{{url_for('reply', chirp_id=notification.chirp_id) }}">See chirp</a>
+        {% endif %}
+        {% if notification.liked %}
+        <h1>{{notification.doer}} liked your chirp!</h1>
+        <a href="{{url_for('reply', chirp_id=notification.chirp_id) }}">See chirp</a>
+        {% endif %}
+        <h3>{{ notification.date_date }}</h3>
+        <a href="{{url_for('delete_notif', notif_id=notification.id)}}">Delete Notification</a>
+    </div>
+    {% endfor %}
 </main>
 
 
